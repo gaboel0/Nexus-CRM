@@ -1,0 +1,463 @@
+import { Activity, Customer, Deal, User } from '../models/crm.models';
+import { Project, ProjectTeam, Task, TaskComment, TeamMember } from '../models/project.models';
+
+/** Usuários válidos para login (senha em texto puro só porque é mock!) */
+export const MOCK_USERS: (User & { password: string })[] = [
+  { id: 1, name: 'Admin', email: 'admin@crm.com', password: '123456', role: 'admin' },
+  { id: 2, name: 'Ana Souza', email: 'ana@crm.com', password: '123456', role: 'vendedor' },
+];
+
+export const MOCK_CUSTOMERS: Customer[] = [
+  {
+    id: 1,
+    name: 'Carlos Lima',
+    company: 'Tech Solutions',
+    email: 'carlos@techsolutions.com',
+    phone: '(11) 98765-4321',
+    status: 'ativo',
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 2,
+    name: 'Mariana Alves',
+    company: 'Alves & Cia',
+    email: 'mariana@alvescia.com',
+    phone: '(21) 99876-1234',
+    status: 'lead',
+    createdAt: '2026-09-14',
+  },
+  {
+    id: 3,
+    name: 'João Pereira',
+    company: 'Construtora JP',
+    email: 'joao@construtorajp.com',
+    phone: '(31) 97654-3210',
+    status: 'ativo',
+    createdAt: '2026-07-21',
+  },
+  {
+    id: 4,
+    name: 'Fernanda Rocha',
+    company: 'Rocha Design',
+    email: 'fernanda@rochadesign.com',
+    phone: '(41) 96543-2109',
+    status: 'inativo',
+    createdAt: '2026-05-10',
+  },
+  {
+    id: 5,
+    name: 'Rafael Costa',
+    company: 'Costa Logística',
+    email: 'rafael@costalog.com',
+    phone: '(51) 95432-1098',
+    status: 'lead',
+    createdAt: '2026-10-01',
+  },
+  {
+    id: 6,
+    name: 'Beatriz Nunes',
+    company: 'Nunes Saúde',
+    email: 'beatriz@nunessaude.com',
+    phone: '(61) 94321-0987',
+    status: 'ativo',
+    createdAt: '2026-09-28',
+  },
+];
+
+export const MOCK_DEALS: Deal[] = [
+  {
+    id: 1,
+    title: 'Licença anual ERP',
+    customerId: 1,
+    value: 48000,
+    stage: 'negociação',
+    ownerId: 2,
+    expectedCloseDate: '2026-10-30',
+  },
+  {
+    id: 2,
+    title: 'Consultoria de processos',
+    customerId: 2,
+    value: 15000,
+    stage: 'proposta',
+    ownerId: 2,
+    expectedCloseDate: '2026-11-15',
+  },
+  {
+    id: 3,
+    title: 'Implantação CRM',
+    customerId: 3,
+    value: 32000,
+    stage: 'ganho',
+    ownerId: 1,
+    expectedCloseDate: '2026-09-20',
+  },
+  {
+    id: 4,
+    title: 'Renovação de suporte',
+    customerId: 4,
+    value: 8000,
+    stage: 'perdido',
+    ownerId: 1,
+    expectedCloseDate: '2026-08-31',
+  },
+  {
+    id: 5,
+    title: 'Integração de frota',
+    customerId: 5,
+    value: 27000,
+    stage: 'qualificação',
+    ownerId: 2,
+    expectedCloseDate: '2026-12-05',
+  },
+  {
+    id: 6,
+    title: 'Portal do paciente',
+    customerId: 6,
+    value: 54000,
+    stage: 'prospecção',
+    ownerId: 1,
+    expectedCloseDate: '2026-12-20',
+  },
+  {
+    id: 7,
+    title: 'Treinamento de equipe',
+    customerId: 1,
+    value: 6000,
+    stage: 'ganho',
+    ownerId: 2,
+    expectedCloseDate: '2026-10-05',
+  },
+];
+
+export const MOCK_ACTIVITIES: Activity[] = [
+  {
+    id: 1,
+    type: 'reunião',
+    description: 'Apresentação da proposta final',
+    customerId: 1,
+    date: '2026-10-13T10:00:00',
+    done: false,
+  },
+  {
+    id: 2,
+    type: 'ligação',
+    description: 'Follow-up sobre orçamento',
+    customerId: 2,
+    date: '2026-10-12T14:30:00',
+    done: false,
+  },
+  {
+    id: 3,
+    type: 'email',
+    description: 'Enviar contrato para assinatura',
+    customerId: 3,
+    date: '2026-10-10T09:00:00',
+    done: true,
+  },
+  {
+    id: 4,
+    type: 'tarefa',
+    description: 'Atualizar cadastro do cliente',
+    customerId: 5,
+    date: '2026-10-14T16:00:00',
+    done: false,
+  },
+  {
+    id: 5,
+    type: 'ligação',
+    description: 'Primeiro contato comercial',
+    customerId: 6,
+    date: '2026-10-09T11:00:00',
+    done: true,
+  },
+];
+
+// Gestão de projetos e atividades do time. Datas próximas de outubro de 2026.
+
+export const MOCK_TEAM: TeamMember[] = [
+  { id: 1, name: 'Ana Souza', role: 'Gerente de projetos' },
+  { id: 2, name: 'Bruno Martins', role: 'Desenvolvedor front-end' },
+  { id: 3, name: 'Carla Dias', role: 'Designer de produto' },
+  { id: 4, name: 'Diego Ramos', role: 'Desenvolvedor back-end' },
+  { id: 5, name: 'Elisa Prado', role: 'Analista de qualidade' },
+];
+
+export const MOCK_PROJECT_TEAMS: ProjectTeam[] = [
+  { id: 1, name: 'Produto digital', description: 'Portais e sites usados pelos clientes.' },
+  { id: 2, name: 'Mobile', description: 'Aplicativos para iOS e Android.' },
+  { id: 3, name: 'Plataforma', description: 'Integrações, infraestrutura e serviços internos.' },
+];
+
+export const MOCK_PROJECTS: Project[] = [
+  {
+    id: 1,
+    name: 'Portal do cliente',
+    description: 'Área logada para clientes acompanharem pedidos e faturas.',
+    status: 'em andamento',
+    teamId: 1,
+    leadId: 1,
+    startDate: '2026-08-04',
+    dueDate: '2026-11-28',
+  },
+  {
+    id: 2,
+    name: 'App mobile 2.0',
+    description: 'Nova versão do aplicativo com modo offline.',
+    status: 'em andamento',
+    teamId: 2,
+    leadId: 2,
+    startDate: '2026-09-01',
+    dueDate: '2026-12-15',
+  },
+  {
+    id: 3,
+    name: 'Integração com ERP',
+    description: 'Sincronização de estoque e notas fiscais.',
+    status: 'pausado',
+    teamId: 3,
+    leadId: 4,
+    startDate: '2026-07-15',
+    dueDate: '2026-11-10',
+  },
+  {
+    id: 4,
+    name: 'Migração para a nuvem',
+    description: 'Levar os serviços internos para a nuvem.',
+    status: 'planejamento',
+    teamId: 3,
+    leadId: 4,
+    startDate: '2026-11-03',
+    dueDate: '2027-01-30',
+  },
+  {
+    id: 5,
+    name: 'Redesign do site',
+    description: 'Nova identidade visual do site institucional.',
+    status: 'concluído',
+    teamId: 1,
+    leadId: 3,
+    startDate: '2026-06-02',
+    dueDate: '2026-09-30',
+  },
+];
+
+export const MOCK_TASKS: Task[] = [
+  {
+    id: 1,
+    title: 'Definir fluxo de login do portal',
+    description:
+      'Desenhar o fluxo de entrada do portal: login com e-mail e senha, recuperação de senha e bloqueio após tentativas inválidas.',
+    projectId: 1,
+    assigneeId: 3,
+    status: 'concluída',
+    priority: 'alta',
+    dueDate: '2026-10-06',
+    completedAt: '2026-10-06',
+  },
+  {
+    id: 2,
+    title: 'Tela de faturas',
+    description:
+      'Criar a tela que lista as faturas do cliente, com filtro por período, status de pagamento e download do PDF.',
+    projectId: 1,
+    assigneeId: 2,
+    status: 'em andamento',
+    priority: 'alta',
+    dueDate: '2026-10-09',
+    completedAt: null,
+  },
+  {
+    id: 3,
+    title: 'API de pedidos',
+    description:
+      'Implementar os endpoints de criação, consulta e cancelamento de pedidos, com validação dos itens e do estoque.',
+    projectId: 1,
+    assigneeId: 4,
+    status: 'em revisão',
+    priority: 'média',
+    dueDate: '2026-10-14',
+    completedAt: null,
+  },
+  {
+    id: 4,
+    title: 'Testes de acessibilidade do portal',
+    description:
+      'Revisar o portal com leitor de tela e navegação por teclado; registrar as falhas encontradas e corrigir as críticas.',
+    projectId: 1,
+    assigneeId: 5,
+    status: 'a fazer',
+    priority: 'média',
+    dueDate: '2026-10-20',
+    completedAt: null,
+  },
+  {
+    id: 5,
+    title: 'Notificações por e-mail',
+    description:
+      'Enviar e-mails de confirmação de pedido e de vencimento de fatura, com modelos aprovados pelo marketing.',
+    projectId: 1,
+    assigneeId: null,
+    status: 'a fazer',
+    priority: 'baixa',
+    dueDate: '2026-10-31',
+    completedAt: null,
+  },
+  {
+    id: 6,
+    title: 'Protótipo do modo offline',
+    description:
+      'Montar um protótipo navegável do modo offline para validar com os usuários de campo.',
+    projectId: 2,
+    assigneeId: 3,
+    status: 'concluída',
+    priority: 'alta',
+    dueDate: '2026-10-08',
+    completedAt: '2026-10-08',
+  },
+  {
+    id: 7,
+    title: 'Sincronização em segundo plano',
+    description:
+      'Sincronizar os dados do app com o servidor quando a conexão voltar, resolvendo conflitos pela data de alteração.',
+    projectId: 2,
+    assigneeId: 2,
+    status: 'a fazer',
+    priority: 'alta',
+    dueDate: '2026-10-10',
+    completedAt: null,
+  },
+  {
+    id: 8,
+    title: 'Cache local de produtos',
+    description:
+      'Guardar o catálogo de produtos no aparelho para consulta sem internet, com atualização diária.',
+    projectId: 2,
+    assigneeId: 4,
+    status: 'em andamento',
+    priority: 'média',
+    dueDate: '2026-10-16',
+    completedAt: null,
+  },
+  {
+    id: 9,
+    title: 'Plano de testes do app',
+    description:
+      'Escrever o plano de testes do app: cenários principais, aparelhos de referência e critérios de aceite.',
+    projectId: 2,
+    assigneeId: 5,
+    status: 'em andamento',
+    priority: 'média',
+    dueDate: '2026-10-17',
+    completedAt: null,
+  },
+  {
+    id: 10,
+    title: 'Ícones e splash screen',
+    description:
+      'Produzir os ícones nos tamanhos exigidos pelas lojas e a splash screen nos temas claro e escuro.',
+    projectId: 2,
+    assigneeId: 3,
+    status: 'em revisão',
+    priority: 'baixa',
+    dueDate: '2026-10-13',
+    completedAt: null,
+  },
+  {
+    id: 11,
+    title: 'Mapear tabelas de estoque',
+    description:
+      'Levantar as tabelas de estoque do sistema legado e documentar como cada campo será migrado.',
+    projectId: 3,
+    assigneeId: 4,
+    status: 'concluída',
+    priority: 'média',
+    dueDate: '2026-09-12',
+    completedAt: '2026-09-11',
+  },
+  {
+    id: 12,
+    title: 'Retomar contrato com o fornecedor',
+    description:
+      'Retomar a negociação do contrato com o fornecedor de ERP para destravar o projeto pausado.',
+    projectId: 3,
+    assigneeId: 1,
+    status: 'a fazer',
+    priority: 'alta',
+    dueDate: '2026-10-15',
+    completedAt: null,
+  },
+  {
+    id: 13,
+    title: 'Levantamento de custos da nuvem',
+    description:
+      'Comparar os custos atuais de infraestrutura com as estimativas de nuvem e preparar a proposta para a diretoria.',
+    projectId: 4,
+    assigneeId: 1,
+    status: 'em andamento',
+    priority: 'média',
+    dueDate: '2026-10-23',
+    completedAt: null,
+  },
+  {
+    id: 14,
+    title: 'Inventário de serviços internos',
+    description:
+      'Listar os serviços internos, seus responsáveis e dependências, para planejar a ordem da migração.',
+    projectId: 4,
+    assigneeId: 4,
+    status: 'a fazer',
+    priority: 'baixa',
+    dueDate: '2026-10-30',
+    completedAt: null,
+  },
+  {
+    id: 15,
+    title: 'Publicar novo site',
+    description:
+      'Publicar o novo site em produção, configurar redirecionamentos das páginas antigas e acompanhar os acessos.',
+    projectId: 5,
+    assigneeId: 2,
+    status: 'concluída',
+    priority: 'alta',
+    dueDate: '2026-09-30',
+    completedAt: '2026-09-29',
+  },
+  {
+    id: 16,
+    title: 'Revisar textos da home',
+    description:
+      'Revisar os textos da página inicial com o marketing, ajustando tom de voz e chamadas para ação.',
+    projectId: 5,
+    assigneeId: 3,
+    status: 'concluída',
+    priority: 'baixa',
+    dueDate: '2026-09-25',
+    completedAt: '2026-09-24',
+  },
+];
+
+export const MOCK_TASK_COMMENTS: TaskComment[] = [
+  {
+    id: 1,
+    taskId: 2,
+    authorName: 'Carla Dias',
+    content: 'Subi o layout da listagem no Figma. O filtro por período fica acima da tabela.',
+    createdAt: '2026-10-07T10:15:00',
+  },
+  {
+    id: 2,
+    taskId: 2,
+    authorName: 'Bruno Martins',
+    content:
+      'Combinado. O download do PDF depende da API de pedidos; vou deixar o botão desativado por enquanto.',
+    createdAt: '2026-10-08T16:40:00',
+  },
+  {
+    id: 3,
+    taskId: 7,
+    authorName: 'Diego Ramos',
+    content: 'O endpoint de sincronização já aceita o campo de data de alteração.',
+    createdAt: '2026-10-09T09:05:00',
+  },
+];

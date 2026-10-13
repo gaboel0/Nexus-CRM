@@ -1,3 +1,89 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* Tokens do design system (docs/DESIGN-SYSTEM.md, seção 8). */
+@theme {
+  --color-crm-primary: #2563eb;
+  --color-crm-primary-hover: #1d4ed8;
+  /* Links de texto: azul primário no claro; mais claro no escuro, para manter o contraste. */
+  --color-crm-link: #2563eb;
+  --color-crm-light: #eff6ff;
+  --color-crm-canvas: #f8fafc;
+  --color-crm-surface: #ffffff;
+  --color-crm-text: #0f172a;
+  --color-crm-muted: #64748b;
+  --color-crm-border: #e2e8f0;
+  --color-crm-border-hover: #cbd5e1;
+  /* Borda externa de cartões (painel de formulário, card, modal). Some no tema escuro. */
+  --color-crm-card-border: #e2e8f0;
+  --color-crm-error: #dc2626;
+  --color-crm-error-hover: #b91c1c;
+  --color-crm-success: #16a34a;
+  --color-crm-success-text: #15803d;
+
+  --height-crm-input: 42px;
+  --radius-crm: 8px;
+  --shadow-crm-focus: 0 0 0 3px rgb(37 99 235 / 0.15);
+  --shadow-crm-error-focus: 0 0 0 3px rgb(220 38 38 / 0.15);
+}
+
+/*
+ * Tema escuro: os mesmos tokens com valores escuros (preto e cinzas neutros, sem tom azul),
+ * no escopo `data-theme="dark"`.
+ * Componentes que usam tokens (cartões, campos, botões, modais) mudam sem classes extras.
+ * `primary` não muda. Erro e sucesso ficam mais claros para manter o contraste do texto.
+ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-crm-light: #262626;
+  --color-crm-link: #60a5fa;
+  --color-crm-canvas: #0a0a0a;
+  --color-crm-surface: #141414;
+  --color-crm-text: #fafafa;
+  --color-crm-muted: #a3a3a3;
+  --color-crm-border: #262626;
+  --color-crm-border-hover: #3a3a3a;
+  --color-crm-card-border: transparent;
+  --color-crm-error: #ef4444;
+  --color-crm-error-hover: #dc2626;
+  --color-crm-success: #22c55e;
+  --color-crm-success-text: #4ade80;
+}
+
+/*
+ * Barra de rolagem da aplicação: fina, com trilho transparente e polegar nos tokens de borda, para
+ * acompanhar os dois temas. Escurece ao passar o mouse sobre a área rolável. Global por natureza
+ * (vale para a página e para toda área com `overflow`), por isso fica aqui e não num componente.
+ */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-crm-border-hover) transparent;
+  }
+
+  *:hover {
+    scrollbar-color: var(--color-crm-muted) transparent;
+  }
+
+  /* Navegadores sem `scrollbar-color` (Safari): mesmo visual pelas pseudo-classes WebKit. */
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 9999px;
+      background: var(--color-crm-border-hover) padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-crm-muted);
+    }
+  }
+}

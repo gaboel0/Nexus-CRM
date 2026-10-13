@@ -1,0 +1,24 @@
+<div>
+  <div class="mb-1.5 flex items-center justify-between gap-2">
+    <label [for]="id()" class="block text-sm font-medium text-crm-text">{{ label() }}</label>
+    @if (maxLength()) {
+      <span class="text-xs text-crm-muted">{{ length() }} / {{ maxLength() }}</span>
+    }
+  </div>
+
+  <textarea
+    [id]="id()"
+    [rows]="rows()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="isDisabled()"
+    [attr.maxlength]="maxLength()"
+    [attr.aria-invalid]="error() ? 'true' : null"
+    [attr.aria-describedby]="messageId()"
+    [class]="classes()"
+    (input)="onTextInput($event)"
+    (blur)="markTouched()"
+  ></textarea>
+
+  <app-field-message [id]="messageId()" [error]="error()" [success]="success()" [hint]="hint()" />
+</div>

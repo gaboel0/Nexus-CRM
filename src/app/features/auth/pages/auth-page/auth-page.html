@@ -1,0 +1,57 @@
+<div class="relative min-h-dvh overflow-hidden" [class]="pageClasses()">
+  <app-city-scene class="absolute inset-0" />
+
+  <!-- Gradiente na base (preto no escuro, canvas no claro): mais opaco em direção à base. -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 bg-linear-to-t to-transparent"
+    [class]="gradientClasses()"
+  ></div>
+
+  <main
+    class="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-12 px-4 py-12 sm:px-8 lg:flex-row lg:justify-between lg:px-24"
+  >
+    <section class="max-w-3xl text-center lg:text-left">
+      <!-- A frase rola ao mudar. -->
+      <h1
+        #headlineRef
+        class="text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+        [class]="headlineClasses()"
+      >
+        {{ headline() }}
+      </h1>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
+        <app-button
+          class="block sm:w-48"
+          variant="primary"
+          [fullWidth]="true"
+          (click)="openRegister()"
+        >
+          Cadastrar
+        </app-button>
+
+        <app-button
+          class="block sm:w-48"
+          [variant]="lightOnDarkVariant()"
+          [fullWidth]="true"
+          (click)="openLogin()"
+        >
+          Entrar
+        </app-button>
+      </div>
+    </section>
+  </main>
+
+  <app-modal [open]="panelOpen()" [title]="panelTitle()" placement="end" (closed)="closePanel()">
+    @if (panelMode(); as mode) {
+      <app-auth-form
+        [mode]="mode"
+        [loading]="loading()"
+        [error]="error()"
+        (login)="onLogin($event)"
+        (closed)="closePanel()"
+      />
+    }
+  </app-modal>
+</div>

@@ -1,0 +1,129 @@
+<div class="flex min-h-dvh bg-crm-canvas">
+  <app-sidebar
+    [items]="navItems"
+    [userName]="user()?.name ?? null"
+    [userRole]="user()?.role ?? null"
+    (logout)="logout()"
+  />
+
+  <main class="flex min-w-0 flex-1 flex-col gap-6 p-4 md:p-6 lg:p-8">
+    <!-- pr-14: espaço para o botão de tema, fixo no canto superior direito. -->
+    <div class="pr-14">
+      <app-text-link to="/home">← Visão geral</app-text-link>
+    </div>
+
+    @if (loading()) {
+      <div role="status" aria-live="polite" class="flex flex-col gap-6">
+        <span class="sr-only">Carregando os dados do projeto...</span>
+        <div>
+          <app-skeleton shape="text" class="h-8 w-64 max-w-full" />
+          <app-skeleton shape="text" class="mt-3 h-4 w-full max-w-xl" />
+        </div>
+        <app-card>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            @for (item of infoPlaceholders; track item) {
+              <div>
+                <app-skeleton shape="text" class="h-3 w-20" />
+                <app-skeleton shape="text" class="mt-2 h-4 w-32" />
+              </div>
+            }
+          </div>
+        </app-card>
+        <app-card title="Tarefas" [padded]="false">
+          <div class="space-y-4 px-5 py-4">
+            @for (item of rowPlaceholders; track item) {
+              <app-skeleton shape="text" class="h-4 w-full" />
+            }
+          </div>
+        </app-card>
+      </div>
+    } @else if (detail(); as detail) {
+      <header>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl font-semibold text-crm-text">{{ detail.project.name }}</h1>
+          <app-badge [tone]="statusTone[detail.project.status]">
+            <span class="sr-only">Status: </span>{{ detail.project.status }}
+          </app-badge>
+        </div>
+        <p class="mt-1 max-w-2xl text-sm text-crm-muted">{{ detail.project.description }}</p>
+      </header>
+
+      <app-card>
+        <dl class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <dt class="text-xs font-semibold tracking-wide text-crm-muted uppercase">Líder</dt>
+            @if (detail.lead; as lead) {
+              <dd class="mt-1 text-crm-text">{{ lead.name }}</dd>
+              <dd class="text-xs text-crm-muted">{{ lead.role }}</dd>
+            } @else {
+              <dd class="mt-1 text-crm-muted">Sem líder</dd>
+            }
+          </div>
+          <div>
+            <dt class="text-xs font-semibold tracking-wide text-crm-muted uppercase">Início</dt>
+            <dd class="mt-1 text-crm-text">{{ detail.project.startDate | date: 'dd/MM/yyyy' }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold tracking-wide text-crm-muted uppercase">Prazo</dt>
+            <dd class="mt-1 text-crm-text">{{ detail.project.dueDate | date: 'dd/MM/yyyy' }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-semibold tracking-wide text-crm-muted uppercase">Andamento</dt>
+            <dd class="mt-1 text-crm-text">
+              {{ detail.doneTasks }}/{{ detail.totalTasks }} tarefas · {{ detail.progress }}%
+            </dd>
+            <dd class="mt-2">
+              <app-progress-bar
+                [value]="detail.progress"
+                [label]="'Andamento de ' + detail.project.name"
+                [tone]="detail.project.status === 'concluído' ? 'success' : 'primary'"
+              />
+            </dd>
+          </div>
+        </dl>
+      </app-card>
+
+      <app-card title="Tarefas" [padded]="false">
+        <ul class="divide-y divide-crm-border" aria-label="Tarefas do projeto">
+          @for (task of detail.tasks; track task.id) {
+            <li
+              class="flex flex-col gap-2 px-5 py-3 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div class="min-w-0">
+                <p class="text-sm font-medium text-crm-text">{{ task.title }}</p>
+                <p class="text-xs text-crm-muted">
+                  {{ task.assignee?.name ?? 'Sem responsável' }} · prioridade {{ task.priority }}
+                </p>
+              </div>
+              <div class="flex shrink-0 items-center gap-3 text-xs">
+                @if (task.overdue) {
+                  <span class="font-medium text-crm-error">
+                    Atrasada · {{ task.dueDate | date: 'dd/MM' }}
+                  </span>
+                } @else {
+                  <span class="text-crm-muted">
+                    <span class="sr-only">Prazo </span>{{ task.dueDate | date: 'dd/MM' }}
+                  </span>
+                }
+                <app-badge [tone]="task.status === 'concluída' ? 'success' : 'neutral'">
+                  {{ task.status }}
+                </app-badge>
+              </div>
+            </li>
+          } @empty {
+            <li class="px-5 py-6 text-center text-sm text-crm-muted">
+              Este projeto ainda não tem tarefas.
+            </li>
+          }
+        </ul>
+      </app-card>
+    } @else {
+      <app-card>
+        <h1 class="text-lg font-semibold text-crm-text">Projeto não encontrado</h1>
+        <p class="mt-1 text-sm text-crm-muted">
+          O projeto que você procurou não existe ou foi removido.
+        </p>
+      </app-card>
+    }
+  </main>
+</div>

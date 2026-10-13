@@ -1,0 +1,61 @@
+<aside
+  aria-label="Menu principal"
+  class="fixed top-4 bottom-4 left-4 z-30 flex flex-col overflow-hidden rounded-2xl border border-crm-card-border bg-crm-surface p-3 shadow-lg transition-[width] duration-300 ease-out motion-reduce:transition-none"
+  [class]="widthClass()"
+>
+  <!-- Topo: logo e nome. Clicar expande ou recolhe a sidebar. -->
+  <button
+    type="button"
+    [class]="itemClasses"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-label]="toggleLabel()"
+    [attr.title]="toggleLabel()"
+    (click)="toggle()"
+  >
+    <span
+      aria-hidden="true"
+      class="-ml-1 flex size-8 shrink-0 items-center justify-center rounded-lg bg-crm-primary font-bold text-white"
+    >
+      C
+    </span>
+    <span aria-hidden="true" class="font-semibold text-crm-text" [class]="labelClasses()">{{
+      brand()
+    }}</span>
+    @if (expanded()) {
+      <app-icon name="menu_open" class="ml-auto" />
+    }
+  </button>
+
+  <nav aria-label="Seções" class="mt-6 flex flex-1 flex-col gap-1">
+    @for (item of items(); track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-crm-light text-crm-link! font-medium"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class]="itemClasses"
+        [attr.title]="expanded() ? null : item.label"
+      >
+        <app-icon [name]="item.icon" />
+        <span [class]="labelClasses()">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="flex flex-col gap-1 border-t border-crm-border pt-3">
+    @if (expanded() && userName()) {
+      <div class="px-2.5 pb-2">
+        <p class="truncate text-sm font-medium text-crm-text">{{ userName() }}</p>
+        <p class="truncate text-xs capitalize text-crm-muted">{{ userRole() }}</p>
+      </div>
+    }
+    <button
+      type="button"
+      [class]="itemClasses"
+      [attr.title]="expanded() ? null : 'Sair'"
+      (click)="logout.emit()"
+    >
+      <app-icon name="logout" />
+      <span [class]="labelClasses()">Sair</span>
+    </button>
+  </div>
+</aside>

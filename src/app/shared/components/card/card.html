@@ -1,0 +1,10 @@
+<section [class]="sectionClasses()">
+  @if (title()) {
+    <header class="shrink-0 border-b border-crm-border px-5 py-4">
+      <h2 class="text-base font-semibold text-crm-text">{{ title() }}</h2>
+    </header>
+  }
+  <div [class]="bodyClasses()">
+    <ng-content />
+  </div>
+</section>

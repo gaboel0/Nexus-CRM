@@ -1,0 +1,51 @@
+<div>
+  <!-- O texto visível é o placeholder; o label fica só para leitores de tela. -->
+  <label [for]="id()" class="sr-only">{{ label() }}</label>
+
+  <div class="relative">
+    <app-icon
+      [name]="leftIcon()"
+      class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-crm-muted"
+    />
+
+    <input
+      #field
+      [id]="id()"
+      [type]="inputType()"
+      [value]="value()"
+      [placeholder]="displayedPlaceholder()"
+      [disabled]="isDisabled()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="messageId()"
+      [class]="classes()"
+      (input)="onInput($event)"
+      (blur)="markTouched()"
+    />
+
+    @if (type() === 'password') {
+      <button
+        type="button"
+        class="absolute inset-y-0 right-2 my-auto flex size-7 items-center justify-center rounded-md text-crm-muted cursor-pointer outline-none transition-colors hover:text-crm-text focus-visible:shadow-crm-focus disabled:cursor-not-allowed"
+        [attr.aria-label]="passwordVisible() ? 'Ocultar senha' : 'Mostrar senha'"
+        [attr.aria-pressed]="passwordVisible()"
+        [disabled]="isDisabled()"
+        (click)="togglePassword()"
+      >
+        <app-icon [name]="passwordVisible() ? 'visibility_off' : 'visibility'" />
+      </button>
+    } @else if (state() === 'error') {
+      <app-icon
+        name="error"
+        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-crm-error"
+      />
+    } @else if (state() === 'success') {
+      <app-icon
+        name="check_circle"
+        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-crm-success"
+      />
+    }
+  </div>
+
+  <app-field-message [id]="messageId()" [error]="error()" [success]="success()" [hint]="hint()" />
+</div>

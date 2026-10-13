@@ -1,0 +1,57 @@
+<section
+  #card
+  class="relative w-full rounded-xl border border-crm-card-border bg-crm-surface p-6 shadow-sm"
+  [attr.aria-labelledby]="titleId"
+>
+  <div class="mb-6 flex items-start justify-between gap-4">
+    <h2 #heading [attr.id]="titleId" class="text-lg font-semibold text-crm-text">{{ title() }}</h2>
+    <button
+      type="button"
+      aria-label="Fechar"
+      class="flex size-8 shrink-0 items-center justify-center rounded-md text-crm-muted cursor-pointer outline-none transition-colors hover:bg-crm-canvas hover:text-crm-text focus-visible:shadow-crm-focus"
+      (click)="closed.emit()"
+    >
+      <app-icon name="close" />
+    </button>
+  </div>
+
+  <form #content [formGroup]="form()" (ngSubmit)="submit()" class="space-y-5" novalidate>
+    @for (field of fields(); track field.name) {
+      @if (field.options) {
+        <app-select
+          [id]="fieldId(field)"
+          [label]="field.label"
+          [options]="field.options"
+          [hint]="field.hint ?? null"
+          [error]="errorFor(field)"
+          [formControlName]="field.name"
+        />
+      } @else {
+        <app-input
+          [id]="fieldId(field)"
+          [label]="field.label"
+          [type]="field.type ?? 'text'"
+          [autocomplete]="field.autocomplete ?? 'off'"
+          [hint]="field.hint ?? null"
+          [error]="errorFor(field)"
+          [formControlName]="field.name"
+        />
+      }
+    }
+
+    <!-- Conteúdo extra do pai entre os campos e o botão (ex.: link "Esqueci minha senha"). -->
+    <ng-content />
+
+    @if (error()) {
+      <p role="alert" class="text-sm text-crm-error">{{ error() }}</p>
+    }
+
+    @if (status()) {
+      <p role="status" class="text-sm text-crm-success-text">{{ status() }}</p>
+    }
+
+    <app-button type="submit" [fullWidth]="true" [loading]="loading()">
+      {{ submitLabel() }}
+    </app-button>
+  </form>
+</section>

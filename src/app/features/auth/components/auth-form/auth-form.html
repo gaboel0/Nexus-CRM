@@ -1,0 +1,17 @@
+<app-form-panel
+  [title]="title()"
+  [submitLabel]="submitLabel()"
+  [form]="form()"
+  [fields]="fields()"
+  [status]="status()"
+  [error]="errorMessage()"
+  [loading]="pending()"
+  (submitted)="onSubmitted()"
+  (closed)="closed.emit()"
+>
+  @if (isLogin()) {
+    <div class="-mt-2 flex justify-end">
+      <app-text-link [to]="forgotPasswordPath">Esqueci minha senha</app-text-link>
+    </div>
+  }
+</app-form-panel>

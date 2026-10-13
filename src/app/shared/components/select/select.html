@@ -1,0 +1,35 @@
+<div>
+  <label [for]="id()" class="mb-1.5 block text-sm font-medium text-crm-text">{{ label() }}</label>
+
+  <div class="relative">
+    <select
+      [id]="id()"
+      [disabled]="isDisabled()"
+      [attr.aria-invalid]="error() ? 'true' : null"
+      [attr.aria-describedby]="messageId()"
+      [class]="classes()"
+      (change)="onSelect($event)"
+      (blur)="markTouched()"
+    >
+      @if (placeholder()) {
+        <option value="" disabled [selected]="value() === ''">{{ placeholder() }}</option>
+      }
+      @for (option of options(); track option.value) {
+        <option
+          [value]="option.value"
+          [disabled]="option.disabled ?? false"
+          [selected]="option.value === value()"
+        >
+          {{ option.label }}
+        </option>
+      }
+    </select>
+
+    <app-icon
+      name="expand_more"
+      class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-crm-muted"
+    />
+  </div>
+
+  <app-field-message [id]="messageId()" [error]="error()" [success]="success()" [hint]="hint()" />
+</div>

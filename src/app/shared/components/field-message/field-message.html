@@ -1,0 +1,7 @@
+@if (error()) {
+  <p [attr.id]="id()" class="mt-1.5 text-xs text-crm-error">{{ error() }}</p>
+} @else if (success()) {
+  <p [attr.id]="id()" class="mt-1.5 text-xs text-crm-success-text">{{ success() }}</p>
+} @else if (hint()) {
+  <p [attr.id]="id()" class="mt-1.5 text-xs text-crm-muted">{{ hint() }}</p>
+}

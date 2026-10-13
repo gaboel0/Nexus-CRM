@@ -1,0 +1,56 @@
+<div class="relative flex min-h-0 flex-1 gap-3 overflow-x-auto p-4">
+  @for (column of columns(); track column.status; let i = $index) {
+    <section
+      class="flex min-h-0 min-w-56 flex-1 flex-col rounded-crm transition-colors"
+      [class]="dropTarget() === column.status ? 'bg-crm-light' : 'bg-crm-canvas'"
+      [attr.aria-labelledby]="'task-board-column-' + i"
+      (dragover)="onDragOver($event, column.status)"
+      (dragleave)="onDragLeave($event, column.status)"
+      (drop)="onDrop($event, column)"
+    >
+      <header class="flex shrink-0 items-center justify-between gap-2 px-3 pt-3 pb-2">
+        <h3
+          [id]="'task-board-column-' + i"
+          class="text-xs font-semibold tracking-wide text-crm-muted uppercase"
+        >
+          {{ column.label }}
+        </h3>
+        <span class="rounded-full bg-crm-surface px-2 py-0.5 text-xs font-medium text-crm-muted">
+          {{ column.tasks.length }}<span class="sr-only"> tarefas</span>
+        </span>
+      </header>
+
+      <!-- Área rolável: focável para quem navega por teclado conseguir rolar. -->
+      <ul
+        tabindex="0"
+        class="relative min-h-0 flex-1 space-y-2 overflow-y-auto rounded-crm px-2 pb-2 outline-none focus-visible:shadow-crm-focus"
+        [attr.aria-label]="'Tarefas: ' + column.label"
+      >
+        @for (task of column.tasks; track task.id) {
+          <li
+            draggable="true"
+            tabindex="0"
+            aria-describedby="task-board-hint"
+            class="cursor-grab rounded-crm border border-crm-border bg-crm-surface p-3 outline-none hover:border-crm-primary hover:shadow-md hover:shadow-crm-primary/30 focus-visible:shadow-crm-focus active:cursor-grabbing motion-safe:transition-[border-color,box-shadow] motion-safe:duration-200"
+            [class.opacity-50]="draggingId() === task.id"
+            [attr.data-task-id]="task.id"
+            (dragstart)="onDragStart($event, task)"
+            (dragend)="onDragEnd()"
+            (click)="taskOpened.emit(task.id)"
+            (keydown)="onKeydown($event, task, i)"
+          >
+            <app-task-card [task]="task" />
+          </li>
+        } @empty {
+          <li class="px-1 py-6 text-center text-xs text-crm-muted">Nenhuma tarefa</li>
+        }
+      </ul>
+    </section>
+  }
+</div>
+
+<p id="task-board-hint" class="sr-only">
+  Enter abre os detalhes. Arraste para outra coluna ou use as setas esquerda e direita para mudar o
+  status.
+</p>
+<p class="sr-only" aria-live="polite">{{ announcement() }}</p>
