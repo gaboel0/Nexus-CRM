@@ -1,59 +1,76 @@
-# CrmDashboard
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+# 🏙️ Nexus CRM
 
-## Development server
+**Painel de gestão de projetos e tarefas feito com Angular 22 e Tailwind CSS 4.**
 
-To start a local development server, run:
+![Angular](https://img.shields.io/badge/Angular-22-DD0031?logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-0.186-000000?logo=threedotjs&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-5-6E9F18?logo=vitest&logoColor=white)
 
-```bash
-ng serve
-```
+</div>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## ✨ Funcionalidades
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- 🔐 **Login com cena 3D** — uma cidade animada em Three.js no fundo da tela de entrada.
+- 📊 **Painel inicial** — indicadores, quadro de tarefas, detalhes e comentários.
+- 📁 **Projetos** — lista com progresso e página de detalhes de cada projeto.
+- 🌗 **Tema claro e escuro** — alternância com um clique.
+- ⚡ **Carregamento com skeleton** — sem telas em branco enquanto os dados chegam.
+- ♿ **Acessível e responsivo** — navegação por teclado e layout a partir de 320 px.
 
-```bash
-ng generate component component-name
-```
+> ℹ️ Os dados são **simulados (mocks)**. Ainda não há backend.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🚀 Começando
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Pré-requisito: [Node.js](https://nodejs.org/) 22 ou superior.
 
 ```bash
-ng test
+git clone https://github.com/gaboel0/Nexus-CRM.git
+cd Nexus-CRM
+npm install
+npm start
 ```
 
-## Running end-to-end tests
+Abra **http://localhost:4200** e entre com:
 
-For end-to-end (e2e) testing, run:
+| E-mail          | Senha    |
+| --------------- | -------- |
+| `admin@crm.com` | `123456` |
 
-```bash
-ng e2e
+## 🛠️ Scripts
+
+| Comando                     | O que faz                       |
+| --------------------------- | ------------------------------- |
+| `npm start`                 | Servidor de desenvolvimento     |
+| `npm run build`             | Build de produção em `dist/`    |
+| `npx ng test --watch=false` | Testes unitários (Vitest)       |
+| `npx prettier --check src`  | Verifica a formatação do código |
+
+## 🗂️ Estrutura
+
+```text
+src/app/
+├── core/       # serviços, guards, modelos e mocks
+├── shared/     # componentes de UI reutilizáveis
+└── features/   # telas por domínio
+    ├── auth/       # login + cena 3D
+    ├── home/       # painel e tarefas
+    └── projects/   # lista e detalhes de projetos
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📚 Documentação
 
-## Additional Resources
+- [Arquitetura](docs/ARCHITECTURE.md) — camadas, rotas e decisões técnicas.
+- [Design System](docs/DESIGN-SYSTEM.md) — cores, componentes e padrões visuais.
+- [Guia de desenvolvimento](docs/CLAUDE.md) — convenções e boas práticas.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+<div align="center">
+Feito com ☕ por <a href="https://github.com/gaboel0">gaboel0</a>
+</div>
